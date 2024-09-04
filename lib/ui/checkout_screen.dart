@@ -8,35 +8,43 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
+  List<Map> cartItems = [
+    {
+      'title': 'Pullover',
+      'image': 'assets/images/tshirt1.jpg',
+      'color': 'Black',
+      'size': 'L',
+      'price': 51,
+      'quantity': 1,
+    },
+    {
+      'title': 'T-Shirt',
+      'image': 'assets/images/tshirt2.png',
+      'color': 'Gray',
+      'size': 'L',
+      'price': 30,
+      'quantity': 1,
+    },
+    {
+      'title': 'Sport Dress',
+      'image': 'assets/images/tshirt3.jpeg',
+      'color': 'Black',
+      'size': 'M',
+      'price': 43,
+      'quantity': 1,
+    },
+  ];
+
+  int get totalAmount {
+    int total = 0;
+    for (Map item in cartItems) {
+      total += item['price'] * item['quantity'] as int;
+    }
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
-    int totalAmount = 0;
-    List<Map> cartItems = [
-      {
-        'title': 'Pullover',
-        'image': 'assets/images/tshirt1.jpg',
-        'color': 'Black',
-        'size': 'L',
-        'price': 51,
-        'quantity': 1,
-      },
-      {
-        'title': 'T-Shirt',
-        'image': 'assets/images/tshirt2.png',
-        'color': 'Gray',
-        'size': 'L',
-        'price': 30,
-        'quantity': 1,
-      },
-      {
-        'title': 'Sport Dress',
-        'image': 'assets/images/tshirt3.jpeg',
-        'color': 'Black',
-        'size': 'M',
-        'price': 43,
-        'quantity': 1,
-      },
-    ];
     return Scaffold(
       backgroundColor: const Color(0xFFf9f9f9),
       appBar: AppBar(
@@ -129,15 +137,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(100)),
                                         child: IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            setState(() {
+                                              if (item['quantity'] > 1) {
+                                                item['quantity']--;
+                                              }
+                                            });
+                                          },
                                           icon: const Icon(Icons.remove),
                                         )),
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
                                       child: Text(
-                                        '1',
-                                        style: TextStyle(
+                                        '${item['quantity']}',
+                                        style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700),
                                       ),
@@ -149,7 +163,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(100)),
                                         child: IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            setState(() {
+                                              item['quantity']++;
+                                            });
+                                          },
                                           icon: const Icon(Icons.add),
                                         )),
                                   ],
@@ -203,16 +221,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
-                  width: double.infinity,
-                  height: 50,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(100)),
-                  child: Text(
-                    'Check Out'.toUpperCase(),
-                    style: const TextStyle(color: Colors.white),
+                InkWell(
+                  onTap: () {
+                    SnackBar snackBar = const SnackBar(
+                      content: Text('Thank you for the purchase'),
+                      padding: EdgeInsets.all(20),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 50,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(100)),
+                    child: Text(
+                      'Check Out'.toUpperCase(),
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                 )
               ],
